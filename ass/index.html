@@ -431,8 +431,107 @@
     </aside>
 
   </main>
+<script>
+    var likes = 0;
+    var coins = 100;
+    var copies = 0;
+
+    var likeEl = document.getElementById('likeCount');
+    var coinEl = document.getElementById('coinCount');
+    var copyEl = document.getElementById('copyCount');
+    var historyList = document.getElementById('historyList');
+
+    function getTime() {
+      var d = new Date();
+      var h = d.getHours();
+      var m = d.getMinutes();
+      var s = d.getSeconds();
+      var ampm = h >=12 ? 'PM' : 'AM';
+      h = h % 12;
+      if (h === 0) h = 12;
+      if (m < 10) m ='0' + m;
+      if (s < 10) s = '0' + s;
+      return h + ':' + m + ':' + s +' ' + ampm;
+    }
+
+    function addHistory(service, number) {
+      var li = document.createElement('li');
+      li.className ='item';
+      var metaDiv =document.createElement('div');
+      metaDiv.className = 'meta';
+      var svcSpan = document.createElement('span');
+      svcSpan.className = 'svc';
+      svcSpan.innerText = service;
 
 
+      var numSpan = document.createElement('span');
+      numSpan.className = 'numTag';
+      numSpan.innerText = number;
+      metaDiv.appendChild(svcSpan);
+      metaDiv.appendChild(numSpan);
+
+      var timeSpan = document.createElement('span');
+      timeSpan.className = 'time';
+      timeSpan.innerText = getTime();
+
+      li.appendChild(metaDiv);
+      li.appendChild(timeSpan);
+
+      historyList.appendChild(li); 
+    }
+    var cards = document.getElementsByClassName('card');
+
+    for (var i = 0; i < cards.length; i++) {
+      (function (card) {
+        var heart = card.getElementsByClassName('heart')[0];
+        var copyBtn = card.getElementsByClassName('copy')[0];
+        var callBtn = card.getElementsByClassName('call')[0];
+        var svc = card.getElementsByTagName('h3')[0].innerText;
+        var num = card.getElementsByClassName('num')[0].innerText;
+
+        heart.onclick = function () {
+          if (heart.getAttribute('data-liked') === 'true') {
+            heart.innerText = '♡';
+            heart.setAttribute('data-liked', 'false');
+            heart.classList.remove('liked');
+            likes--;
+          } else {
+            heart.innerText = '♥';
+            heart.setAttribute('data-liked', 'true');
+            heart.classList.add('liked');
+            likes++;
+          }
+          likeEl.innerText = likes;
+        }
+
+        copyBtn.onclick = function () {
+          var textArea = document.createElement('textarea');
+          textArea.value = num;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          copies++;
+          copyEl.innerText = copies;
+          alert('Copied: ' + num);
+        }
+
+        callBtn.onclick = function () {
+          if (coins < 20) {
+            alert('Not enough coins!');
+            return;
+          }
+          coins -=20;
+          coinEl.innerText = coins;
+          addHistory(svc, num); 
+          alert('Calling ' + svc+ ' at ' + num);
+        }
+  })(cards[i]);
+    }
+    document.getElementById('clearHistory').onclick = function () {
+      historyList.innerHTML = '';
+    }
+  </script>
 
 
 </body>
