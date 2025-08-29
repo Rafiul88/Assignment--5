@@ -243,7 +243,25 @@
       color: #777;
       white-space: nowrap
     }
+/* Responsive */
+    @media (max-width: 768px) {
+      .wrap {
+        flex-direction: column;
+      }
 
+      .cards {
+        grid-template-columns: repeat(1, 1fr);
+      }
+
+      .history {
+        width: 100%;
+        max-height: none;
+      }
+
+      .stats {
+        margin-top: 10px;
+      }
+    }
 
 
 
